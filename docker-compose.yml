@@ -1,0 +1,7 @@
+version: '3'
+services:
+  availability-api:
+    build: .
+    container_name: availability-api
+    ports:
+      - "8080:8080"
