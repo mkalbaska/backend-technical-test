@@ -4,8 +4,8 @@ import com.tui.proof.MainApplication;
 import com.tui.proof.ws.dto.Booking;
 import com.tui.proof.ws.dto.Flight;
 import com.tui.proof.ws.dto.Holder;
+import com.tui.proof.ws.dto.Monetary;
 import com.tui.proof.ws.dto.validation.ManualValidationException;
-import com.tui.proof.ws.repository.BookingRepository;
 import com.tui.proof.ws.repository.FlightRepository;
 import com.tui.proof.ws.repository.impl.MockBookingRepository;
 import com.tui.proof.ws.service.BookingService;
@@ -67,7 +67,7 @@ class BookingServiceImplTest {
                                 "test", "test", "test@test.com", Collections.singletonList("1235468798")
                         ),
                         Collections.singletonList(
-                                new Flight("test", "test", LocalDate.now(), LocalTime.now(), BigDecimal.ONE)
+                                new Flight("test", "test", LocalDate.now(), LocalTime.now(), new Monetary(BigDecimal.ONE, ""))
                         ))
         );
 
@@ -81,25 +81,24 @@ class BookingServiceImplTest {
                 new Booking(
                         new Holder(
                                 "test", "test", "test",
-                                "test", "test", "test@test.com", Collections.singletonList("1235468798")
+                                "test", "test", "test@test.com",
+                                Collections.singletonList("1235468798")
                         ),
                         new ArrayList<>(
                                 Collections.singletonList(
-                                        new Flight("test", "test", LocalDate.now(), LocalTime.now(), BigDecimal.ONE)
+                                        new Flight("test", "test", LocalDate.now(), LocalTime.now(),
+                                                new Monetary(BigDecimal.ONE, ""))
                                 )
                         ))
         );
-        testSubject.addFlight(1L, new Flight("new", "new", LocalDate.now(), LocalTime.now(), BigDecimal.ONE));
+        testSubject.addFlight(1L, new Flight("new", "new", LocalDate.now(), LocalTime.now(),
+                new Monetary(BigDecimal.ONE, "")));
         assertEquals(2, bookingRepository.findById(1L).getFlights().size());
     }
 
     @Test
-    void delete() {
-    }
-
-    @Test
     void deleteNotExistingFlight() {
-        Flight flight = new Flight("test", "test", LocalDate.now(), LocalTime.now(), BigDecimal.ONE);
+        Flight flight = new Flight("test", "test", LocalDate.now(), LocalTime.now(), new Monetary(BigDecimal.ONE, ""));
         Mockito.when(bookingRepository.findById(1L)).thenReturn(
                 new Booking(
                         new Holder(
@@ -108,13 +107,15 @@ class BookingServiceImplTest {
                         ),
                         new ArrayList<>(Collections.singletonList(flight)))
         );
-        testSubject.deleteFlight(1L, new Flight("new", "new", LocalDate.now(), LocalTime.now(), BigDecimal.ONE));
+        testSubject.deleteFlight(1L, new Flight("new", "new", LocalDate.now(), LocalTime.now(),
+                new Monetary(BigDecimal.ONE, "")));
         assertEquals(1, bookingRepository.findById(1L).getFlights().size());
     }
 
     @Test
     void deleteFlight() {
-        Flight flight = new Flight("test", "test", LocalDate.now(), LocalTime.now(), BigDecimal.ONE);
+        Flight flight = new Flight("test", "test", LocalDate.now(), LocalTime.now(),
+                new Monetary(BigDecimal.ONE, ""));
         Mockito.when(bookingRepository.findById(1L)).thenReturn(
                 new Booking(
                         new Holder(

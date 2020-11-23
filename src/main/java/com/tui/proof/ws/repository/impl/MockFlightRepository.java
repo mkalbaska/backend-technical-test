@@ -1,6 +1,7 @@
 package com.tui.proof.ws.repository.impl;
 
 import com.tui.proof.ws.dto.Flight;
+import com.tui.proof.ws.dto.Monetary;
 import com.tui.proof.ws.repository.FlightRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -25,7 +28,10 @@ public class MockFlightRepository implements FlightRepository {
                     UUID.randomUUID().toString(),
                     LocalDate.now(),
                     LocalTime.now().truncatedTo(ChronoUnit.MINUTES),
-                    new BigDecimal(it * 20)
+                    new Monetary(
+                            new BigDecimal(it * 20),
+                            "USD"
+                    )
             )).collect(Collectors.toList());
 
     @Override

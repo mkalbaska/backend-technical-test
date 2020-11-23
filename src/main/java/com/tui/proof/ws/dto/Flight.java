@@ -8,7 +8,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -24,5 +23,5 @@ public class Flight {
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @JsonFormat(pattern = "HH:mm")
     private final LocalTime time;
-    private final BigDecimal price;
+    private final Monetary currency;
 }

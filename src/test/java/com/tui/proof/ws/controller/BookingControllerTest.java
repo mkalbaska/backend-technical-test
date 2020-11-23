@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tui.proof.ws.dto.Booking;
 import com.tui.proof.ws.dto.Flight;
 import com.tui.proof.ws.dto.Holder;
+import com.tui.proof.ws.dto.Monetary;
 import com.tui.proof.ws.repository.FlightRepository;
 import com.tui.proof.ws.service.BookingService;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,10 @@ class BookingControllerTest {
                 UUID.randomUUID().toString(),
                 LocalDate.now(),
                 LocalTime.now().truncatedTo(ChronoUnit.MINUTES),
-                new BigDecimal(100)
+                new Monetary(
+                        new BigDecimal(100),
+                        "USD"
+                )
         );
         Booking booking = new Booking(
                 new Holder(
@@ -99,7 +103,10 @@ class BookingControllerTest {
                 UUID.randomUUID().toString(),
                 LocalDate.now(),
                 LocalTime.now().truncatedTo(ChronoUnit.MINUTES),
-                new BigDecimal(100)
+                new Monetary(
+                        new BigDecimal(100),
+                        "USD"
+                )
         );
         when(flightRepository.isValid(flight)).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.put("/booking/1/flight")
@@ -118,7 +125,10 @@ class BookingControllerTest {
                 UUID.randomUUID().toString(),
                 LocalDate.now(),
                 LocalTime.now().truncatedTo(ChronoUnit.MINUTES),
-                new BigDecimal(100)
+                new Monetary(
+                        new BigDecimal(100),
+                        "USD"
+                )
         );
         when(flightRepository.isValid(flight)).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.delete("/booking/1/flight")
