@@ -3,6 +3,10 @@ package com.tui.proof.ws.service.impl;
 import com.tui.proof.ws.dto.Booking;
 import com.tui.proof.ws.dto.Flight;
 import com.tui.proof.ws.dto.validation.ManualValidationException;
+import com.tui.proof.ws.event.EventDispatcher;
+import com.tui.proof.ws.event.impl.event.AddBookingFlightEvent;
+import com.tui.proof.ws.event.impl.event.DeleteBookingEvent;
+import com.tui.proof.ws.event.impl.event.DeleteBookingFlightEvent;
 import com.tui.proof.ws.repository.BookingRepository;
 import com.tui.proof.ws.service.BookingService;
 import lombok.AllArgsConstructor;
@@ -23,6 +27,7 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final Validator validator;
+    private final EventDispatcher eventDispatcher;
 
     @Override
     public Booking findById(Long id) {
@@ -58,7 +63,7 @@ public class BookingServiceImpl implements BookingService {
     public void addFlight(Long id, Flight flight) {
         Optional.ofNullable(bookingRepository.findById(id))
                 .ifPresentOrElse(
-                        booking -> booking.getFlights().add(flight),
+                        booking -> eventDispatcher.dispatch(new AddBookingFlightEvent(id, flight)),
                         () -> { throw new NoSuchElementException("Booking with id " + id + " not found"); }
                 );
     }
@@ -66,7 +71,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public void delete(Long id) {
         Optional.ofNullable(bookingRepository.findById(id)).ifPresentOrElse(
-                booking -> bookingRepository.delete(booking.getId()),
+                booking -> eventDispatcher.dispatch(new DeleteBookingEvent(id)),
                 () -> { throw new NoSuchElementException("Booking with id " + id + " not found"); }
         );
     }
@@ -75,7 +80,7 @@ public class BookingServiceImpl implements BookingService {
     public void deleteFlight(Long id, Flight flight) {
         Optional.ofNullable(bookingRepository.findById(id))
                 .ifPresentOrElse(
-                        booking -> booking.getFlights().remove(flight),
+                        booking -> eventDispatcher.dispatch(new DeleteBookingFlightEvent(id, flight)),
                         () -> { throw new NoSuchElementException("Booking with id " + id + " not found"); }
                 );
     }

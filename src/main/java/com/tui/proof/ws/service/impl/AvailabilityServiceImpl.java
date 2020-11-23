@@ -3,9 +3,9 @@ package com.tui.proof.ws.service.impl;
 import com.tui.proof.ws.dto.Availability;
 import com.tui.proof.ws.dto.Flight;
 import com.tui.proof.ws.event.EventDispatcher;
-import com.tui.proof.ws.event.FlightWasShownEvent;
-import com.tui.proof.ws.service.AvailabilityService;
+import com.tui.proof.ws.event.impl.event.FlightWasShownEvent;
 import com.tui.proof.ws.repository.FlightRepository;
+import com.tui.proof.ws.service.AvailabilityService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

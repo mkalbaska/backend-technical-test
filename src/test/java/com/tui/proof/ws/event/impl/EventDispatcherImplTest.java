@@ -1,32 +1,32 @@
 package com.tui.proof.ws.event.impl;
 
-import com.tui.proof.ws.event.Event;
+import com.tui.proof.MainApplication;
 import com.tui.proof.ws.event.EventDispatcher;
-import com.tui.proof.ws.event.EventHandler;
-import com.tui.proof.ws.event.FlightWasShownEvent;
+import com.tui.proof.ws.event.impl.event.DeleteBookingEvent;
+import com.tui.proof.ws.event.impl.handler.DeleteBookingEventHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Collections;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.mockito.ArgumentMatchers.any;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = MainApplication.class)
 class EventDispatcherImplTest {
 
-    @Mock
-    private EventHandler eventHandler;
+    @Autowired
+    private EventDispatcher testSubject;
+    @MockBean
+    private DeleteBookingEventHandler eventHandler;
 
     @Test
     void dispatch() throws InterruptedException {
-        Mockito.<Class<?>>when(eventHandler.getEventType()).thenReturn(FlightWasShownEvent.class);
-        EventDispatcher testSubject = new EventDispatcherImpl(Collections.singletonList(eventHandler));
-        testSubject.dispatch(new FlightWasShownEvent(null));
+        testSubject.dispatch(new DeleteBookingEvent(1L));
         Thread.sleep(5000); //wait for dispatch to be compeleted
-        Mockito.verify(eventHandler, Mockito.times(1)).getEventType();
-        Mockito.verify(eventHandler, Mockito.times(1)).onEvent(any(Event.class));
+        Mockito.verify(eventHandler, Mockito.times(1)).onApplicationEvent(any(DeleteBookingEvent.class));
     }
 }

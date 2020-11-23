@@ -2,7 +2,7 @@ package com.tui.proof.ws.service.impl;
 
 import com.tui.proof.ws.dto.Flight;
 import com.tui.proof.ws.event.EventDispatcher;
-import com.tui.proof.ws.event.FlightWasShownEvent;
+import com.tui.proof.ws.event.impl.event.FlightWasShownEvent;
 import com.tui.proof.ws.repository.impl.MockFlightRepository;
 import com.tui.proof.ws.service.AvailabilityService;
 import org.junit.jupiter.api.Test;

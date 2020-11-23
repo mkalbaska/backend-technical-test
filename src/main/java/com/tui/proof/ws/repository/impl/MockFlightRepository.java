@@ -22,7 +22,7 @@ import static java.lang.Integer.min;
 @AllArgsConstructor
 public class MockFlightRepository implements FlightRepository {
 
-    private final static List<Flight> flights = IntStream.rangeClosed(1, 50)
+    private final static List<Flight> flights = IntStream.rangeClosed(1, 5)
             .mapToObj(it -> new Flight(
                     "company " + it,
                     UUID.randomUUID().toString(),
