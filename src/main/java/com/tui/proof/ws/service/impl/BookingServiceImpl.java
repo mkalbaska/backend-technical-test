@@ -42,6 +42,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Validated
     public void confirm(Long id) {
+        //we can confirm booking if all data is still valid
         Optional.ofNullable(bookingRepository.findById(id)).ifPresentOrElse(
                 this::confirm,
                 () -> {
@@ -63,6 +64,7 @@ public class BookingServiceImpl implements BookingService {
     public void addFlight(Long id, Flight flight) {
         Optional.ofNullable(bookingRepository.findById(id))
                 .ifPresentOrElse(
+                        //send an event that we need to add flight
                         booking -> eventDispatcher.dispatch(new AddBookingFlightEvent(id, flight)),
                         () -> { throw new NoSuchElementException("Booking with id " + id + " not found"); }
                 );
@@ -71,6 +73,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public void delete(Long id) {
         Optional.ofNullable(bookingRepository.findById(id)).ifPresentOrElse(
+                //send an event that we need to delete booking
                 booking -> eventDispatcher.dispatch(new DeleteBookingEvent(id)),
                 () -> { throw new NoSuchElementException("Booking with id " + id + " not found"); }
         );

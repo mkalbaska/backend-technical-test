@@ -22,6 +22,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     @Override
     public List<Flight> flight(Availability availabilityRequest) {
         return flightRepository.flight().stream()
+                //send an event that flight was shown - it should be available only next 15 minutes
                 .peek(it -> eventDispatcher.dispatch(new FlightWasShownEvent(it)))
                 .collect(Collectors.toList());
     }

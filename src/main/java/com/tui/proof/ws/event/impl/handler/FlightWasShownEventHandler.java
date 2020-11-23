@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 @RequiredArgsConstructor
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.yml")
 public class FlightWasShownEventHandler implements ApplicationListener<FlightWasShownEvent> {
 
     @Value("${flight.availability.minutes:15}")

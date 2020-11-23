@@ -1,0 +1,6 @@
+flight:
+  availability:
+    minutes: 15
+jwt:
+  secret: jqpqRZnSeylR
+  issuer: issuer

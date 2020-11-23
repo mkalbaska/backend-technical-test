@@ -3,26 +3,16 @@ package com.tui.proof.ws.controller;
 import com.tui.proof.ws.service.AvailabilityService;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.util.Base64Utils;
 
-@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = AvailabilityController.class)
-@ComponentScan("com.tui.proof.ws")
-class AvailabilityControllerTest {
+class AvailabilityControllerTest extends AbstractControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
     @MockBean
     private AvailabilityService availabilityService;
 
@@ -36,8 +26,7 @@ class AvailabilityControllerTest {
                 "\"paxes\": { \"infants\": 0, \"children\": 0, \"adults\": 0}" +
                 "}";
         mockMvc.perform(MockMvcRequestBuilders.post("/availability")
-                .header(HttpHeaders.AUTHORIZATION,
-                        "Basic " + Base64Utils.encodeToString("root:root".getBytes()))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + login())
                 .content(request)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -55,8 +44,7 @@ class AvailabilityControllerTest {
                 "\"paxes\": { \"infants\": 0, \"children\": 0, \"adults\": 0}" +
                 "}";
         mockMvc.perform(MockMvcRequestBuilders.post("/availability")
-                .header(HttpHeaders.AUTHORIZATION,
-                        "Basic " + Base64Utils.encodeToString("root:root".getBytes()))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + login())
                 .content(request)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());

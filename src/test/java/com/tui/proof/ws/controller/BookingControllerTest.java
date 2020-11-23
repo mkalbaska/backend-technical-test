@@ -1,6 +1,5 @@
 package com.tui.proof.ws.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tui.proof.ws.dto.Booking;
 import com.tui.proof.ws.dto.Flight;
 import com.tui.proof.ws.dto.Holder;
@@ -8,18 +7,12 @@ import com.tui.proof.ws.dto.Monetary;
 import com.tui.proof.ws.repository.FlightRepository;
 import com.tui.proof.ws.service.BookingService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.util.Base64Utils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -30,15 +23,9 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = BookingController.class)
-@ComponentScan("com.tui.proof.ws")
-class BookingControllerTest {
+class BookingControllerTest extends AbstractControllerTest {
 
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private MockMvc mockMvc;
     @MockBean
     private BookingService bookingService;
     @MockBean
@@ -69,8 +56,7 @@ class BookingControllerTest {
 
         String request = objectMapper.writeValueAsString(booking);
         mockMvc.perform(MockMvcRequestBuilders.post("/booking")
-                .header(HttpHeaders.AUTHORIZATION,
-                        "Basic " + Base64Utils.encodeToString("root:root".getBytes()))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + login())
                 .content(request)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
@@ -80,8 +66,7 @@ class BookingControllerTest {
     @Test
     void getBooking() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/booking/1")
-                .header(HttpHeaders.AUTHORIZATION,
-                        "Basic " + Base64Utils.encodeToString("root:root".getBytes()))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + login())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
         ;
@@ -90,8 +75,7 @@ class BookingControllerTest {
     @Test
     void deleteBooking() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/booking/1")
-                .header(HttpHeaders.AUTHORIZATION,
-                        "Basic " + Base64Utils.encodeToString("root:root".getBytes()))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + login())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
@@ -110,8 +94,7 @@ class BookingControllerTest {
         );
         when(flightRepository.isValid(flight)).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.put("/booking/1/flight")
-                .header(HttpHeaders.AUTHORIZATION,
-                        "Basic " + Base64Utils.encodeToString("root:root".getBytes()))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + login())
                 .content(objectMapper.writeValueAsString(flight))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -132,8 +115,7 @@ class BookingControllerTest {
         );
         when(flightRepository.isValid(flight)).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.delete("/booking/1/flight")
-                .header(HttpHeaders.AUTHORIZATION,
-                        "Basic " + Base64Utils.encodeToString("root:root".getBytes()))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + login())
                 .content(objectMapper.writeValueAsString(flight))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -143,8 +125,7 @@ class BookingControllerTest {
     @Test
     void confirm() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/booking/confirm/1")
-                .header(HttpHeaders.AUTHORIZATION,
-                        "Basic " + Base64Utils.encodeToString("root:root".getBytes()))
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + login())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }

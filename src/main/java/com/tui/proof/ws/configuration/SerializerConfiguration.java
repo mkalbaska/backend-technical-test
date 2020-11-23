@@ -16,6 +16,7 @@ public class SerializerConfiguration {
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jacksonCustomizer() {
         return jackson2ObjectMapperBuilder -> {
+            //add serializers to get and send time in valid format
             jackson2ObjectMapperBuilder.serializers(new LocalTimeSerializer(TIME_FORMAT));
             jackson2ObjectMapperBuilder.deserializers(new LocalTimeDeserializer(TIME_FORMAT));
         };
