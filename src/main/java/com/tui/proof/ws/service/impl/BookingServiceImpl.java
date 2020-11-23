@@ -13,6 +13,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -36,7 +37,12 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Validated
     public void confirm(Long id) {
-        Optional.ofNullable(bookingRepository.findById(id)).ifPresent(this::confirm);
+        Optional.ofNullable(bookingRepository.findById(id)).ifPresentOrElse(
+                this::confirm,
+                () -> {
+                    throw new NoSuchElementException("Booking with id " + id + " not found");
+                }
+        );
     }
 
     private void confirm(Booking booking) {
@@ -51,17 +57,26 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public void addFlight(Long id, Flight flight) {
         Optional.ofNullable(bookingRepository.findById(id))
-                .ifPresent(booking -> booking.getFlights().add(flight));
+                .ifPresentOrElse(
+                        booking -> booking.getFlights().add(flight),
+                        () -> { throw new NoSuchElementException("Booking with id " + id + " not found"); }
+                );
     }
 
     @Override
     public void delete(Long id) {
-        bookingRepository.delete(id);
+        Optional.ofNullable(bookingRepository.findById(id)).ifPresentOrElse(
+                booking -> bookingRepository.delete(booking.getId()),
+                () -> { throw new NoSuchElementException("Booking with id " + id + " not found"); }
+        );
     }
 
     @Override
     public void deleteFlight(Long id, Flight flight) {
         Optional.ofNullable(bookingRepository.findById(id))
-                .ifPresent(booking -> booking.getFlights().remove(flight));
+                .ifPresentOrElse(
+                        booking -> booking.getFlights().remove(flight),
+                        () -> { throw new NoSuchElementException("Booking with id " + id + " not found"); }
+                );
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class ExceptionHandlerAdvice  {
@@ -27,6 +28,13 @@ public class ExceptionHandlerAdvice  {
     @ExceptionHandler(ManualValidationException.class)
     public Map<String, String> handleValidationExceptions(ManualValidationException ex) {
         return getErrors(ex.getErrors());
+    }
+
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoSuchElementException.class)
+    public String handleValidationExceptions(NoSuchElementException ex) {
+        return ex.getMessage();
     }
 
     private Map<String, String> getErrors(Errors bindingResult) {

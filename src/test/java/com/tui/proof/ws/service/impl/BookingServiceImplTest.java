@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -139,5 +140,24 @@ class BookingServiceImplTest {
                 Collections.emptyList()));
 
         assertNotNull(result.getId());
+    }
+
+    @Test
+    void deleteExistingBooking() {
+        Mockito.when(bookingRepository.findById(1L)).thenReturn(
+                new Booking(
+                        new Holder(
+                                "test", "test", "test",
+                                "test", "test", "test@test.com", Collections.singletonList("1235468798")
+                        ),
+                        new ArrayList<>(Collections.emptyList()))
+        );
+        assertAll(() -> testSubject.delete(1L));
+    }
+
+    @Test
+    void deleteNonExistingBooking() {
+        Mockito.when(bookingRepository.findById(2L)).thenReturn(null);
+        assertThrows(NoSuchElementException.class, () -> testSubject.delete(2L));
     }
 }
