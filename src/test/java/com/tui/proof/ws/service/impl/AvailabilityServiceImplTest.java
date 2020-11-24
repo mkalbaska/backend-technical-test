@@ -22,7 +22,7 @@ class AvailabilityServiceImplTest {
     private EventDispatcher eventDispatcher;
 
     @Test
-    void flight() {
+    void flight() throws Exception {
 
         AvailabilityService testSubject = new AvailabilityServiceImpl(
                 new MockFlightRepository(),
@@ -30,6 +30,7 @@ class AvailabilityServiceImplTest {
         );
 
         final List<Flight> result = testSubject.flight(null);
+        Thread.sleep(5000); //wait for event dispatcher completed
         Mockito.verify(eventDispatcher, Mockito.times(result.size())).dispatch(any(FlightWasShownEvent.class));
 
     }
