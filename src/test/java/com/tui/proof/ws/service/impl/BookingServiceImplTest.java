@@ -77,7 +77,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void addFlight() throws Exception {
+    void addFlight() {
         Mockito.when(bookingRepository.findById(1L)).thenReturn(
                 new Booking(
                         new Holder(
@@ -94,12 +94,11 @@ class BookingServiceImplTest {
         );
         testSubject.addFlight(1L, new Flight("new", "new", LocalDate.now(), LocalTime.now(),
                 new Monetary(BigDecimal.ONE, "")));
-        Thread.sleep(2000); //wait for event handler
         assertEquals(2, bookingRepository.findById(1L).getFlights().size());
     }
 
     @Test
-    void deleteNotExistingFlight() throws Exception {
+    void deleteNotExistingFlight() {
         Flight flight = new Flight("test", "test", LocalDate.now(), LocalTime.now(), new Monetary(BigDecimal.ONE, ""));
         Mockito.when(bookingRepository.findById(1L)).thenReturn(
                 new Booking(
@@ -111,12 +110,11 @@ class BookingServiceImplTest {
         );
         testSubject.deleteFlight(1L, new Flight("new", "new", LocalDate.now(), LocalTime.now(),
                 new Monetary(BigDecimal.ONE, "")));
-        Thread.sleep(2000); //wait for event handler
         assertEquals(1, bookingRepository.findById(1L).getFlights().size());
     }
 
     @Test
-    void deleteFlight() throws Exception {
+    void deleteFlight() {
         Flight flight = new Flight("test", "test", LocalDate.now(), LocalTime.now(),
                 new Monetary(BigDecimal.ONE, ""));
         Mockito.when(bookingRepository.findById(1L)).thenReturn(
@@ -128,7 +126,6 @@ class BookingServiceImplTest {
                         new ArrayList<>(Collections.singletonList(flight)))
         );
         testSubject.deleteFlight(1L, flight);
-        Thread.sleep(2000); //wait for event handler
         assertEquals(0, bookingRepository.findById(1L).getFlights().size());
     }
 
@@ -146,7 +143,7 @@ class BookingServiceImplTest {
     }
 
     @Test
-    void deleteExistingBooking() throws Exception {
+    void deleteExistingBooking() {
         Mockito.when(bookingRepository.findById(1L)).thenReturn(
                 new Booking(
                         new Holder(
@@ -155,15 +152,12 @@ class BookingServiceImplTest {
                         ),
                         new ArrayList<>(Collections.emptyList()))
         );
-        Thread.sleep(2000); //wait for event handler
-
         assertAll(() -> testSubject.delete(1L));
     }
 
     @Test
-    void deleteNonExistingBooking() throws Exception {
+    void deleteNonExistingBooking() {
         Mockito.when(bookingRepository.findById(2L)).thenReturn(null);
-        Thread.sleep(2000); //wait for event handler
         assertThrows(NoSuchElementException.class, () -> testSubject.delete(2L));
     }
 }

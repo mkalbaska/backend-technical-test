@@ -1,10 +1,8 @@
 package com.tui.proof.ws.controller;
 
-import com.tui.proof.ws.service.AvailabilityService;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -12,9 +10,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(controllers = AvailabilityController.class)
 class AvailabilityControllerTest extends AbstractControllerTest {
-
-    @MockBean
-    private AvailabilityService availabilityService;
 
     @Test
     void availabilityRequestIsInvalid() throws Exception {

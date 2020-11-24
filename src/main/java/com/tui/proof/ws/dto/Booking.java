@@ -13,6 +13,7 @@ import java.util.List;
 public class Booking {
 
     private Long id;
+    private boolean confimed = false;
     @NotNull
     private final Holder holder;
     @NotEmpty

@@ -4,8 +4,8 @@ import com.tui.proof.ws.dto.Booking;
 import com.tui.proof.ws.dto.Flight;
 import com.tui.proof.ws.dto.Holder;
 import com.tui.proof.ws.dto.Monetary;
+import com.tui.proof.ws.repository.BookingRepository;
 import com.tui.proof.ws.repository.FlightRepository;
-import com.tui.proof.ws.service.BookingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,13 +21,14 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(controllers = BookingController.class)
 class BookingControllerTest extends AbstractControllerTest {
 
     @MockBean
-    private BookingService bookingService;
+    private BookingRepository bookingRepository;
     @MockBean
     private FlightRepository flightRepository;
 
@@ -74,6 +75,7 @@ class BookingControllerTest extends AbstractControllerTest {
 
     @Test
     void deleteBooking() throws Exception {
+        when(bookingRepository.findById(1L)).thenReturn(new Booking(null, Collections.emptyList()));
         mockMvc.perform(MockMvcRequestBuilders.delete("/booking/1")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + login())
                 .contentType(MediaType.APPLICATION_JSON))
@@ -93,6 +95,7 @@ class BookingControllerTest extends AbstractControllerTest {
                 )
         );
         when(flightRepository.isValid(flight)).thenReturn(true);
+        when(bookingRepository.findById(1L)).thenReturn(new Booking(null, Collections.emptyList()));
         mockMvc.perform(MockMvcRequestBuilders.put("/booking/1/flight")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + login())
                 .content(objectMapper.writeValueAsString(flight))
@@ -103,6 +106,7 @@ class BookingControllerTest extends AbstractControllerTest {
 
     @Test
     void deleteFlight() throws Exception {
+        when(bookingRepository.findById(1L)).thenReturn(new Booking(null, Collections.emptyList()));
         Flight flight = new Flight(
                 "company ",
                 UUID.randomUUID().toString(),
@@ -124,6 +128,20 @@ class BookingControllerTest extends AbstractControllerTest {
 
     @Test
     void confirm() throws Exception {
+        when(flightRepository.isValid(any(Flight.class))).thenReturn(true);
+
+        when(bookingRepository.findById(1L)).thenReturn(new Booking(
+                new Holder("name", "last", "addr", "postal",
+                        "BY", "test@test.com", Collections.singletonList("1234567890")),
+                Collections.singletonList(
+                        new Flight(
+                                "",
+                                "",
+                                LocalDate.now(),
+                                LocalTime.now(),
+                                new Monetary(BigDecimal.ONE, "")
+                        )
+                )));
         mockMvc.perform(MockMvcRequestBuilders.post("/booking/confirm/1")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + login())
                 .contentType(MediaType.APPLICATION_JSON))

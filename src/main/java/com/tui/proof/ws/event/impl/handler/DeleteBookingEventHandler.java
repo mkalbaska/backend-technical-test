@@ -1,7 +1,7 @@
 package com.tui.proof.ws.event.impl.handler;
 
 import com.tui.proof.ws.event.impl.event.DeleteBookingEvent;
-import com.tui.proof.ws.repository.BookingRepository;
+import com.tui.proof.ws.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationListener;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DeleteBookingEventHandler implements ApplicationListener<DeleteBookingEvent> {
 
-    private final BookingRepository bookingRepository;
+    private final BookingService bookingService;
 
     @Override
     public void onApplicationEvent(DeleteBookingEvent deleteBookingEvent) {
-        bookingRepository.delete(deleteBookingEvent.getBookingId());
+        bookingService.delete(deleteBookingEvent.getBookingId());
     }
 }
